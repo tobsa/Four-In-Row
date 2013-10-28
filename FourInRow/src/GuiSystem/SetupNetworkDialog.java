@@ -1,4 +1,4 @@
-package NetworkSystem;
+package GuiSystem;
 
 import SharedSystem.IConstants;
 import java.awt.BorderLayout;
