@@ -1,5 +1,6 @@
 package GuiSystem;
 
+import DatabaseSystem.Database;
 import GameSystem.GameManager;
 import NetworkSystem.NetworkManager;
 import SharedSystem.BlockQueue;
@@ -25,6 +26,7 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
     private GameBoard gameBoard = new GameBoard();
     private Thread gameThread = new Thread(gameManager);
     private JLabel label = new JLabel();
+    private Database database = new Database();
     
     public GameFrame() {
         setLayout(new BorderLayout());
@@ -66,6 +68,7 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
         gameManager.clearIGMListeners();
         gameManager.registerIGGListener(gameBoard);
         gameManager.registerIGMListener(this);
+        gameManager.registerIGMListener(database);
         networkManager.closeConnection();
         BlockQueue.getInstance().clear();
     }
@@ -85,9 +88,7 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
                 if(result == NETWORK_SERVER_CREATE){
                     gameManager.createNetworkPlayer1(PLAYER_NETWORK_SEND, networkManager.getServerName());
                     gameManager.createNetworkPlayer2(PLAYER_NETWORK_READ, networkManager.getClientName());
-
-                    gameThread = new Thread(gameManager);
-                    gameThread.start();
+                    executeGame();
                 }
                 
                 frame.dispose();
@@ -177,7 +178,7 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
     private class ButtonHighscoreListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
-            
+            new HighscoreDialog(GameFrame.this, database);
         }
     }
     
