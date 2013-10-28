@@ -24,4 +24,5 @@ public interface IConstants {
     public static final int NETWORK_SERVER_CREATE = 0;
     public static final int NETWORK_SERVER_PORT_IN_USE = 1;
     public static final int NETWORK_SERVER_ABORT = 2;
+    public static final int HIGHSCORE_MAX_ROWS = 10;
 }
