@@ -21,4 +21,7 @@ public interface IConstants {
     public static final int CLIENT = 1;
     public static final int SETUP_NETWORK_OK = 0;
     public static final int SETUP_NETWORK_CANCEL = 1;
+    public static final int NETWORK_SERVER_CREATE = 0;
+    public static final int NETWORK_SERVER_PORT_IN_USE = 1;
+    public static final int NETWORK_SERVER_ABORT = 2;
 }

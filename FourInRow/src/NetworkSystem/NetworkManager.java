@@ -1,15 +1,14 @@
 package NetworkSystem;
 
+import SharedSystem.IConstants;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class NetworkManager {
+public class NetworkManager implements IConstants {
     private ServerSocket serverSocket;
     private Socket socket;
     private DataInputStream input;
@@ -17,11 +16,10 @@ public class NetworkManager {
     private String serverName;
     private String clientName;
     
-    public boolean createServer(String name, int port) {        
+    public int createServer(String name, int port) {        
         try {
-            if(serverSocket != null)
-                serverSocket.close();
-            
+            closeConnection();
+                        
             serverSocket = new ServerSocket(port);
             socket = serverSocket.accept();
                 
@@ -32,16 +30,16 @@ public class NetworkManager {
             
             serverName = name;
             clientName = input.readUTF();
-            return true;
+            return NETWORK_SERVER_CREATE;
         } catch (IOException ex) {
-            return false;
+            System.out.println("NetworkManager::IOException: " + ex);
+            return NETWORK_SERVER_ABORT;
         }
     }
     
     public boolean createClient(String name, String ip, int port) {
         try {
-            if(socket != null)
-                socket.close();
+            closeConnection();
             
             socket = new Socket(ip, port);
             
@@ -84,7 +82,23 @@ public class NetworkManager {
             
             serverSocket = null;
             socket = null;
-        } catch (IOException ex) {
+        } catch (IOException ex) {}
+    }
+    
+    public boolean isPortAvailable(int port) {
+        ServerSocket s = null;
+        try {
+            s = new ServerSocket(port);
+            return true;
+        } catch(IOException ex) {
+            return false;
+        }
+        finally {
+            try {
+                if(s != null)
+                    s.close();
+            } catch (IOException ex) {
+            }
         }
     }
 }

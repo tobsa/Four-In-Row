@@ -75,18 +75,38 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
         gameThread = new Thread(gameManager);
         gameThread.start();
     }
+    
+    private void executeNetworkGame(final String name, final int port) {       
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ServerAcceptFrame frame = new ServerAcceptFrame(GameFrame.this, networkManager);
+                
+                int result = networkManager.createServer(name, port);
+                if(result == NETWORK_SERVER_CREATE){
+                    gameManager.createNetworkPlayer1(PLAYER_NETWORK_SEND, networkManager.getServerName());
+                    gameManager.createNetworkPlayer2(PLAYER_NETWORK_READ, networkManager.getClientName());
+
+                    gameThread = new Thread(gameManager);
+                    gameThread.start();
+                }
+                
+                frame.dispose();
+            }
+        }).start();
+    }
 
     @Override
     public void updateResult(int result, String name1, String name2) {
         switch(result) {
             case PLAYER_1_WON:
-                new WinnerDialog(name1);
+                new WinnerDialog(this, name1);
                 break;
             case PLAYER_2_WON:
-                new WinnerDialog(name2);
+                new WinnerDialog(this, name2);
                 break;
             case DRAW:
-                new DrawDialog(name1, name2);
+                new DrawDialog(this, name1, name2);
                 break;
         }
     }
@@ -98,13 +118,13 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
     
     @Override 
     public void updateInvalidMove(String name) {
-        new MessageDialog(name + " tried to make an invalid move!");
+        new MessageDialog(this, name + " tried to make an invalid move!");
     }
     
     @Override
     public void updateLostConnection() {
         networkManager.closeConnection();
-        new MessageDialog("Lost connection!");
+        new MessageDialog(this, "Lost connection!");
     }
     
     private class ButtonNewGameListener implements ActionListener {
@@ -112,7 +132,7 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
         public void actionPerformed(ActionEvent event) {
             gameManager.setPaused(true);
             
-            SetupGameDialog dialog = new SetupGameDialog();
+            SetupGameDialog dialog = new SetupGameDialog(GameFrame.this);
             if(dialog.getSelection() == SETUP_GAME_OK) {
                 initializeGame();
                 gameManager.createPlayer1(dialog.getPlayer1Type(), dialog.getPlayer1Name());
@@ -129,18 +149,16 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
         public void actionPerformed(ActionEvent event) {
             gameManager.setPaused(true);
             
-            SetupNetworkDialog dialog = new SetupNetworkDialog();
+            SetupNetworkDialog dialog = new SetupNetworkDialog(GameFrame.this);
             if(dialog.getSelection() == SETUP_NETWORK_OK) {
                 initializeGame();
                
-                if(dialog.getPlayerType() == HOST) {
-                    if(networkManager.createServer(dialog.getPlayerName(), dialog.getPort())) {
-                        gameManager.createNetworkPlayer1(PLAYER_NETWORK_SEND, networkManager.getServerName());
-                        gameManager.createNetworkPlayer2(PLAYER_NETWORK_READ, networkManager.getClientName());
-                        executeGame();
+                if(dialog.getPlayerType() == HOST) {                    
+                    if(networkManager.isPortAvailable(dialog.getPort())) {
+                        executeNetworkGame(dialog.getPlayerName(), dialog.getPort());
                     }
                     else 
-                        new MessageDialog("Port already in use!");
+                        new MessageDialog(GameFrame.this, "Port already in use!");
                 }
                 else {
                     if(networkManager.createClient(dialog.getPlayerName(), dialog.getIP(), dialog.getPort())) {
@@ -149,7 +167,7 @@ public class GameFrame extends JFrame implements IConstants, IGMListener {
                         executeGame();
                     }
                     else 
-                        new MessageDialog("Couldn't connect to server!");
+                        new MessageDialog(GameFrame.this, "Couldn't connect to server!");
                 }
             }
              

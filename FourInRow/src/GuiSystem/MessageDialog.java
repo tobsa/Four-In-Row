@@ -6,13 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class MessageDialog extends JDialog {
     
-    public MessageDialog(String message) {
+    public MessageDialog(JFrame parent, String message) {
         setLayout(new BorderLayout());
         
         JButton button = new JButton("OK");
@@ -32,7 +33,7 @@ public class MessageDialog extends JDialog {
         pack();
         
         setTitle("Message");
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setModal(true);
         setVisible(true);

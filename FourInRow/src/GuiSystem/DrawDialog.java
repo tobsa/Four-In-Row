@@ -5,13 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class DrawDialog extends JDialog {
     
-    public DrawDialog(String name1, String name2) {
+    public DrawDialog(JFrame parent, String name1, String name2) {
         setLayout(new BorderLayout());
         
         JButton button = new JButton("OK");
@@ -31,7 +32,7 @@ public class DrawDialog extends JDialog {
         pack();
         
         setTitle("Game Result");
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setModal(true);
         setVisible(true);

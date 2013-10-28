@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -21,7 +22,7 @@ public class SetupGameDialog extends JDialog implements IConstants {
     private JComboBox<String> jcbPlayer2 = new JComboBox();
     private int selection;
     
-    public SetupGameDialog() {
+    public SetupGameDialog(JFrame parent) {
         setLayout(new BorderLayout());
         
         jcbPlayer1.addItem("Human");
@@ -57,7 +58,7 @@ public class SetupGameDialog extends JDialog implements IConstants {
         pack();
         
         setTitle("Setup Game");
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setResizable(false);
         setModal(true);

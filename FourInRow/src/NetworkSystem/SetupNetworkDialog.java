@@ -11,6 +11,7 @@ import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -23,7 +24,7 @@ public class SetupNetworkDialog extends JDialog implements IConstants {
     private JTextField jtfPort   = new JTextField("8080", 10);
     private int selection;
     
-    public SetupNetworkDialog() {
+    public SetupNetworkDialog(JFrame parent) {
         setLayout(new BorderLayout());
         
         jcbPlayer.addItem("Host");
@@ -75,7 +76,7 @@ public class SetupNetworkDialog extends JDialog implements IConstants {
         pack();
         
         setTitle("Setup Network Game");
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setResizable(false);
         setModal(true);
