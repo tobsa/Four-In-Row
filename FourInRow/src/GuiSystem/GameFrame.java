@@ -2,7 +2,6 @@ package GuiSystem;
 
 import GameSystem.GameManager;
 import NetworkSystem.NetworkManager;
-import NetworkSystem.SetupNetworkDialog;
 import SharedSystem.BlockQueue;
 import SharedSystem.IConstants;
 import SharedSystem.IGMListener;
